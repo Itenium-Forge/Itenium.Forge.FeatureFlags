@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import federation from '@originjs/vite-plugin-federation'
+import { federation } from '@module-federation/vite'
 
 export default defineConfig({
   plugins: [
@@ -12,10 +12,10 @@ export default defineConfig({
         './App': './src/App.tsx',
         './navConfig': './src/navConfig.ts',
       },
-      shared: ['react', 'react-dom'],
+      shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
     }),
   ],
   server: { port: 3001 },
   preview: { port: 3001 },
-  build: { target: 'esnext' },
+  optimizeDeps: { include: ['react', 'react-dom'] },
 })
