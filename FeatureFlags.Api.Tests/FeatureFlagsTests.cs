@@ -38,6 +38,27 @@ public class FeatureFlagsTests
         Assert.That(flags, Is.Not.Null);
         Assert.That(flags!, Has.Length.GreaterThan(0));
         Assert.That(flags!, Has.All.Matches<Flag>(f => f.Name != null));
+        Assert.That(flags!, Has.Some.Matches<Flag>(f => string.Equals(f.Name, "dark-mode", StringComparison.Ordinal)));
+    }
+
+    [Test]
+    public async Task Flags_Toggle_ChangesEnabledState()
+    {
+        var before = await _client.GetFromJsonAsync<Flag[]>("/api/flags");
+        var darkMode = before!.Single(f => string.Equals(f.Name, "dark-mode", StringComparison.Ordinal));
+
+        var response = await _client.PutAsync("/api/flags/dark-mode/toggle", null);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var toggled = await response.Content.ReadFromJsonAsync<Flag>();
+        Assert.That(toggled!.Enabled, Is.Not.EqualTo(darkMode.Enabled));
+    }
+
+    [Test]
+    public async Task Flags_Toggle_UnknownFlag_ReturnsNotFound()
+    {
+        var response = await _client.PutAsync("/api/flags/unknown-flag/toggle", null);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     [Test]

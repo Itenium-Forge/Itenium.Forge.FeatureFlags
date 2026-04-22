@@ -1,16 +1,19 @@
+using FeatureFlags.Api;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FlagsController : ControllerBase
+public class FlagsController(FlagStore store) : ControllerBase
 {
     [HttpGet]
-    public IActionResult Get() => Ok(new[]
+    public IActionResult Get() => Ok(store.GetAll());
+
+    [HttpPut("{name}/toggle")]
+    public IActionResult Toggle(string name)
     {
-        new { Name = "dark-mode",     Enabled = true  },
-        new { Name = "new-dashboard", Enabled = false },
-        new { Name = "beta-export",   Enabled = false },
-    });
+        var flag = store.Toggle(name);
+        return flag is null ? NotFound() : Ok(flag);
+    }
 }
