@@ -48,19 +48,21 @@ dotnet test
 
 ## Hoe werkt het?
 
-`feature-flags-ui` exposed twee modules via Module Federation:
+`feature-flags-ui` exposed één module via Module Federation:
 
 | Module | Wat |
 |--------|-----|
 | `featureFlags/App` | React component — toont de flags tabel |
-| `featureFlags/navConfig` | Nav config — `{ label, path }` voor de shell navigatie |
+
+De shell ontdekt de remote URL at runtime via `Shell.Api/apps` — er is geen hardcoded URL in de shell build. Pad (`/feature-flags`) en label (`Feature Flags`) worden afgeleid uit de naam via conventie.
 
 De shell laadt de component lazy wanneer de gebruiker naar `/feature-flags` navigeert. De flags data wordt opgehaald via Shell.Api (`5100/api/flags`), die als proxy naar `FeatureFlags.Api` fungeert.
 
 ```
-shell-ui (3000) → lazy import → feature-flags-ui (3001)
-                                  └── fetch /api/flags → Shell.Api (5100)
-                                                           └── Refit → FeatureFlags.Api (5200)
+shell-ui (3000) → GET /apps    → Shell.Api (5100)              remote URL ophalen
+               → lazy import   → feature-flags-ui (3001)       component laden
+               → GET /api/flags → Shell.Api (5100)             proxy
+                                   └── Refit → FeatureFlags.Api (5200)
 ```
 
 ---
