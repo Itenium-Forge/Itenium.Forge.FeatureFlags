@@ -26,7 +26,7 @@ try
 
     app.MapGet("/", () => "Hello from Feature Flags");
 
-    app.Run();
+    await app.RunAsync().ConfigureAwait(false);
 }
 catch (Exception ex)
 {
@@ -34,7 +34,8 @@ catch (Exception ex)
 }
 finally
 {
-    await Log.CloseAndFlushAsync();
+    await Log.CloseAndFlushAsync().ConfigureAwait(false);
 }
 
+#pragma warning disable S1118 // needed for WebApplicationFactory<Program> in tests
 public partial class Program { }
