@@ -10,7 +10,6 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './App': './src/App.tsx',
-        './navConfig': './src/navConfig.ts',
       },
       shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
     }),
