@@ -2,6 +2,7 @@ using FeatureFlags.Api;
 using Itenium.Forge.Controllers;
 using Itenium.Forge.HealthChecks;
 using Itenium.Forge.Logging;
+using Itenium.Forge.SecurityHeaders;
 using Itenium.Forge.Settings;
 using Serilog;
 
@@ -21,6 +22,7 @@ try
 
     var app = builder.Build();
 
+    app.UseForgeSecurityHeaders();
     app.UseForgeProblemDetails();
     app.UseForgeLogging();
     app.UseForgeControllers();
