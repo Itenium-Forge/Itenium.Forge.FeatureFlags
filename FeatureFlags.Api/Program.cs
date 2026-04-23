@@ -17,6 +17,8 @@ try
     builder.AddForgeProblemDetails();
     builder.AddForgeHealthChecks();
 
+    builder.Services.AddSingleton<FlagStore>();
+
     var app = builder.Build();
 
     app.UseForgeProblemDetails();
