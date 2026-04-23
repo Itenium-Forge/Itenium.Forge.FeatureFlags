@@ -3,6 +3,7 @@ using Itenium.Forge.Controllers;
 using Itenium.Forge.HealthChecks;
 using Itenium.Forge.Logging;
 using Itenium.Forge.Settings;
+using Itenium.Forge.Swagger;
 using Serilog;
 
 Log.Logger = LoggingExtensions.CreateBootstrapLogger();
@@ -13,6 +14,7 @@ try
     builder.AddForgeSettings<FeatureFlagsSettings>();
     builder.AddForgeLogging();
 
+    builder.AddForgeSwagger();
     builder.AddForgeControllers();
     builder.AddForgeProblemDetails();
     builder.AddForgeHealthChecks();
@@ -21,6 +23,7 @@ try
 
     var app = builder.Build();
 
+    app.UseForgeSwagger();
     app.UseForgeProblemDetails();
     app.UseForgeLogging();
     app.UseForgeControllers();
