@@ -14,12 +14,9 @@ public class FlagsController(FlagStore store) : ControllerBase
     [ProducesResponseType<ForgePagedResult<Flag>>(StatusCodes.Status200OK)]
     public IActionResult Get([FromQuery] ForgePageQuery query)
     {
-        var allFlags = store.GetAll().ToArray();
-        var pagedFlags = allFlags
-            .Skip((query.Page - 1) * query.PageSize)
-            .Take(query.PageSize);
-
-        return Ok(new ForgePagedResult<Flag>(pagedFlags, allFlags.Length, query.Page, query.PageSize));
+        var allFlags = store.GetAll().ToList();
+        var pagedFlags = allFlags.Skip((query.Page - 1) * query.PageSize).Take(query.PageSize);
+        return Ok(new ForgePagedResult<Flag>(pagedFlags, allFlags.Count, query.Page, query.PageSize));
     }
 
     /// <summary>Toggles the specified feature flag.</summary>
