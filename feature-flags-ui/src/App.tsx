@@ -6,15 +6,36 @@ interface Flag {
   enabled: boolean
 }
 
+interface PagedResult<T> {
+  items: T[]
+  page: {
+    currentPage: number
+    pageSize: number
+    totalCount: number
+    totalPages: number
+  }
+}
+
 function App() {
   const [flags, setFlags] = useState<Flag[]>([])
+  const [page, setPage] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const pageSize = 5
 
   useEffect(() => {
-    fetch('http://localhost:5100/api/flags')
+    setLoading(true)
+    fetch(`http://localhost:5100/api/flags?page=${page}&pageSize=${pageSize}`)
       .then(r => r.json())
-      .then(setFlags)
-      .catch(() => setFlags([]))
-  }, [])
+      .then((result: PagedResult<Flag>) => {
+        setFlags(prev => [...prev, ...result.items])
+        setHasNextPage(result.page.currentPage < result.page.totalPages)
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }, [page])
 
   const toggle = async (name: string) => {
     const response = await fetch(`http://localhost:5200/api/flags/${name}/toggle`, { method: 'PUT' })
@@ -60,6 +81,21 @@ function App() {
             ))}
           </tbody>
         </table>
+
+        <div className="ff-pagination">
+          {hasNextPage && (
+            <button 
+              className="ff-load-more" 
+              onClick={() => setPage(prev => prev + 1)}
+              disabled={loading}
+            >
+              {loading ? 'Laden...' : 'Meer laden'}
+            </button>
+          )}
+          {!hasNextPage && flags.length > 0 && (
+            <p className="ff-end-message">Geen flags meer beschikbaar.</p>
+          )}
+        </div>
       </main>
     </div>
   )

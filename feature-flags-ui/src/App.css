@@ -62,3 +62,38 @@
 :root.dark .ff-content h1 {
   color: #e0e0e0;
 }
+
+.ff-pagination {
+  margin-top: 1.5rem;
+  max-width: 480px;
+  display: flex;
+  justify-content: center;
+}
+
+.ff-load-more {
+  padding: 0.5rem 1.5rem;
+  background: #4a7c59;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ff-load-more:hover:not(:disabled) {
+  background: #3a6b49;
+}
+
+.ff-load-more:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ff-end-message {
+  color: #6b7280;
+  font-style: italic;
+}
+
+:root.dark .ff-end-message {
+  color: #9ca3af;
+}

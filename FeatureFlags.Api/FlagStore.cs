@@ -8,6 +8,18 @@ public class FlagStore
         ["dark-mode"]     = true,
         ["new-dashboard"] = false,
         ["beta-export"]   = false,
+        ["ai-chat"]       = true,
+        ["biometrics"]    = false,
+        ["v3-engine"]     = true,
+        ["experimental"]  = false,
+        ["pro-features"]  = true,
+        ["legacy-mode"]   = false,
+        ["fast-track"]    = true,
+        ["early-access"]  = false,
+        ["nightly"]       = true,
+        ["stable-only"]   = false,
+        ["canary"]        = true,
+        ["blue-green"]    = false,
     };
 
     /// <summary>Returns all feature flags and their current state.</summary>

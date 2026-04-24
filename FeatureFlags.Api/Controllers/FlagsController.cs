@@ -1,4 +1,5 @@
 using FeatureFlags.Api;
+using Itenium.Forge.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Api.Controllers;
@@ -8,10 +9,18 @@ namespace FeatureFlags.Api.Controllers;
 [Route("api/[controller]")]
 public class FlagsController(FlagStore store) : ControllerBase
 {
-    /// <summary>Returns all feature flags.</summary>
+    /// <summary>Returns a paginated list of feature flags.</summary>
     [HttpGet]
-    [ProducesResponseType<Flag[]>(StatusCodes.Status200OK)]
-    public IActionResult Get() => Ok(store.GetAll());
+    [ProducesResponseType<ForgePagedResult<Flag>>(StatusCodes.Status200OK)]
+    public IActionResult Get([FromQuery] ForgePageQuery query)
+    {
+        var allFlags = store.GetAll().ToArray();
+        var pagedFlags = allFlags
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize);
+
+        return Ok(new ForgePagedResult<Flag>(pagedFlags, allFlags.Length, query.Page, query.PageSize));
+    }
 
     /// <summary>Toggles the specified feature flag.</summary>
     [HttpPut("{name}/toggle")]

@@ -32,20 +32,21 @@ public class FeatureFlagsTests
     }
 
     [Test]
-    public async Task Flags_ReturnsListOfFlags()
+    public async Task Flags_ReturnsPaginatedFlags()
     {
-        var flags = await _client.GetFromJsonAsync<Flag[]>("/api/flags");
-        Assert.That(flags, Is.Not.Null);
-        Assert.That(flags!, Has.Length.GreaterThan(0));
-        Assert.That(flags!, Has.All.Matches<Flag>(f => f.Name != null));
-        Assert.That(flags!, Has.Some.Matches<Flag>(f => string.Equals(f.Name, "dark-mode", StringComparison.Ordinal)));
+        var result = await _client.GetFromJsonAsync<PagedResult<Flag>>("/api/flags");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Items, Has.Count.GreaterThan(0));
+        Assert.That(result.Items, Has.All.Matches<Flag>(f => f.Name != null));
+        Assert.That(result.Items, Has.Some.Matches<Flag>(f => string.Equals(f.Name, "dark-mode", StringComparison.Ordinal)));
+        Assert.That(result.Page, Is.Not.Null);
     }
 
     [Test]
     public async Task Flags_Toggle_ChangesEnabledState()
     {
-        var before = await _client.GetFromJsonAsync<Flag[]>("/api/flags");
-        var darkMode = before!.Single(f => string.Equals(f.Name, "dark-mode", StringComparison.Ordinal));
+        var result = await _client.GetFromJsonAsync<PagedResult<Flag>>("/api/flags");
+        var darkMode = result!.Items.Single(f => string.Equals(f.Name, "dark-mode", StringComparison.Ordinal));
 
         var response = await _client.PutAsync("/api/flags/dark-mode/toggle", null);
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -86,5 +87,7 @@ public class FeatureFlagsTests
         Assert.That(response.Headers.Contains("Access-Control-Allow-Origin"), Is.True);
     }
 
+    private record PagedResult<T>(List<T> Items, PageInfo Page);
+    private record PageInfo(int TotalCount);
     private record Flag(string Name, bool Enabled);
 }
