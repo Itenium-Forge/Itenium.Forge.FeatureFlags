@@ -56,10 +56,10 @@ dotnet test
 
 De shell ontdekt de remote URL at runtime via `Shell.Api/apps` — er is geen hardcoded URL in de shell build. Pad (`/feature-flags`) en label (`Feature Flags`) worden afgeleid uit de naam via conventie.
 
-De shell laadt de component lazy wanneer de gebruiker naar `/feature-flags` navigeert. De flags data wordt opgehaald via Shell.Api (`5100/api/flags`), die als proxy naar `FeatureFlags.Api` fungeert.
+De shell laadt the component lazy wanneer de gebruiker naar `/feature-flags` navigeert. De flags data wordt opgehaald via Shell.Api (`5100/api/flags`), die als proxy naar `FeatureFlags.Api` fungeert.
 
 ```
-shell-ui (3000) → GET /apps    → Shell.Api (5100)              remote URL ophalen
+shell-ui (3005) → GET /apps    → Shell.Api (5100)              remote URL ophalen
                → lazy import   → feature-flags-ui (3001)       component laden
                → GET /api/flags → Shell.Api (5100)             proxy
                                    └── Refit → FeatureFlags.Api (5200)
@@ -80,6 +80,13 @@ FeatureFlags.Api gebruikt de volgende Forge packages (v0.3.14):
 | `Itenium.Forge.HealthChecks` | `/health/live` en `/health/ready` endpoints |
 | `Itenium.Forge.SecurityHeaders` | Security headers (CSP, HSTS, X-Frame-Options, …) via ForApi profiel |
 | `Itenium.Forge.Swagger` | Swagger UI + OpenAPI doc gegenereerd uit XML comments |
+| `Itenium.Forge.Telemetry` | OpenTelemetry (OTLP) export voor traces en metrics |
+
+---
+
+## Telemetry — OpenTelemetry
+
+De microservice gebruikt `Itenium.Forge.Telemetry` om traces en metrics te exporteren via OTLP naar `http://localhost:4317`. In combinatie met de shell ontstaat een end-to-end distributed trace.
 
 ---
 
