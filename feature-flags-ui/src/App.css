@@ -1,12 +1,61 @@
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #ffffff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  color-scheme: light;
+}
+
+:root.dark {
+  --text: #9ca3af;
+  --text-h: #f3f4f6;
+  --bg: #16171d;
+  --border: #2e303a;
+  --code-bg: #1f2028;
+  --accent: #c084fc;
+  --accent-bg: rgba(192, 132, 252, 0.15);
+  --accent-border: rgba(192, 132, 252, 0.5);
+  --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  color-scheme: dark;
+}
+
 .feature-flags {
   display: flex;
   flex-direction: column;
+}
+
+/* Standalone Styling (Port 3001) */
+.feature-flags.is-standalone {
   min-height: 100vh;
+  background: var(--bg);
+}
+
+.feature-flags.is-standalone .ff-content {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  background: var(--bg);
+  margin-top: 2rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+/* Remote Styling (when embedded in Shell) */
+.feature-flags.is-remote .ff-content {
+  padding: 0;
 }
 
 .ff-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 1.5rem;
   height: 56px;
   background: #4a7c59;
@@ -23,10 +72,6 @@
   font-size: 1.1rem;
 }
 
-.ff-content {
-  padding: 2rem;
-}
-
 .ff-table {
   border-collapse: collapse;
   width: 100%;
@@ -37,31 +82,42 @@
 .ff-table td {
   text-align: left;
   padding: 0.6rem 1rem;
-  border-bottom: 1px solid #e5e4e7;
-  color: #1a1a1a;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-h);
 }
 
 .ff-table th {
   font-weight: 600;
+  color: var(--text);
 }
 
 .ff-content h1 {
-  color: #1a1a1a;
+  color: var(--text-h);
+}
+
+.ff-actions {
+  margin-bottom: 1.5rem;
+  max-width: 480px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ff-export-btn {
+  padding: 0.4rem 1rem;
+  background: #4a7c59;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ff-export-btn:hover {
+  background: #3a6b49;
 }
 
 .enabled { color: #16a34a; font-weight: 600; }
 .disabled { color: #6b7280; }
-
-/* Dark mode — inherits :root.dark from the shell when embedded */
-:root.dark .ff-table th,
-:root.dark .ff-table td {
-  color: #e0e0e0;
-  border-color: #2a2a4a;
-}
-
-:root.dark .ff-content h1 {
-  color: #e0e0e0;
-}
 
 .ff-pagination {
   margin-top: 1.5rem;
@@ -90,10 +146,6 @@
 }
 
 .ff-end-message {
-  color: #6b7280;
+  color: var(--text);
   font-style: italic;
-}
-
-:root.dark .ff-end-message {
-  color: #9ca3af;
 }

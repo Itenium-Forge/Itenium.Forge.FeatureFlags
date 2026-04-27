@@ -10,6 +10,7 @@
     <PackageVersion Include="Itenium.Forge.HealthChecks" Version="0.3.14" />
     <PackageVersion Include="Itenium.Forge.Logging" Version="0.3.14" />
     <PackageVersion Include="Itenium.Forge.Settings" Version="0.3.14" />
+    <PackageVersion Include="Itenium.Forge.Telemetry" Version="0.3.14" />
     <PackageVersion Include="Serilog" Version="4.3.0" />
   </ItemGroup>
 
