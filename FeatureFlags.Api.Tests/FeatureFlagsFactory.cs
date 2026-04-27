@@ -14,9 +14,15 @@ public class FeatureFlagsFactory : WebApplicationFactory<Program>
         {
             services.PostConfigure<HealthCheckServiceOptions>(options =>
             {
-                var otlp = options.Registrations.FirstOrDefault(r => string.Equals(r.Name, "otlp", StringComparison.Ordinal));
-                if (otlp != null)
-                    options.Registrations.Remove(otlp);
+                // Remove all health checks except 'self' to avoid external dependencies during tests
+                var toRemove = options.Registrations
+                    .Where(r => !string.Equals(r.Name, "self", StringComparison.Ordinal))
+                    .ToList();
+
+                foreach (var registration in toRemove)
+                {
+                    options.Registrations.Remove(registration);
+                }
             });
         });
     }
